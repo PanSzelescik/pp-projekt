@@ -4,4 +4,4 @@ project(pp_projekt)
 set(CMAKE_CXX_STANDARD 14)
 
 add_executable(pp_projekt
-        PodGlupimOslem.cpp)
+        PodGlupimOslem.cpp menu.cpp)
