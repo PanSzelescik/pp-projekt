@@ -6,11 +6,11 @@
 
 using namespace std;
 
-const string FILE_NAME = R"(C:\Git\pp-projekt\menu.txt)";
-const string CONTINUE_CHAR = "X";
-const string CONTINUE_CHAR_LOWER = string(1, (char) tolower(CONTINUE_CHAR.at(0)));
-const string EXIT_CHAR = "Q";
-const string EXIT_CHAR_LOWER = string(1, (char) tolower(EXIT_CHAR.at(0)));
+static const string FILE_NAME = "menu.txt";
+static const string CONTINUE_CHAR = "X";
+static const string CONTINUE_CHAR_LOWER = string(1, (char) tolower(CONTINUE_CHAR.at(0)));
+static const string EXIT_CHAR = "Q";
+static const string EXIT_CHAR_LOWER = string(1, (char) tolower(EXIT_CHAR.at(0)));
 
 class Dish {
 public:
@@ -80,12 +80,14 @@ vector<Dish> readMenu() {
         }
     }
 
+    menuFile.close();
+
     return menu;
 }
 
 string doubleToString(const double& d) {
-    std::stringstream stream;
-    stream << std::fixed << std::setprecision(2) << d;
+    stringstream stream;
+    stream << fixed << setprecision(2) << d;
     return stream.str();
 }
 
