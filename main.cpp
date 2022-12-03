@@ -92,19 +92,19 @@ void printTotalCount(const Order &order) {
     cout << "Aktualna cena: " << doubleToString(order.value()) << endl;
 }
 
-string getDishString(const Dish& dish) {
+string getDishString(const Dish &dish) {
     stringstream ss;
     ss << dish.name << " (" << dish.ingredients << "), " << doubleToString(dish.value);
     return ss.str();
 }
 
-string getDishStringWithAmount(const Dish& dish, int amount) {
+string getDishStringWithAmount(const Dish &dish, int amount) {
     stringstream ss;
     ss << dish.name << ", " << amount << " x " << doubleToString(dish.value) << ", lacznie: " << doubleToString(dish.value * (double) amount);
     return ss.str();
 }
 
-string getSelectionString(const Selection& selection) {
+string getSelectionString(const Selection &selection) {
     return getDishStringWithAmount(selection.dish, selection.amount);
 }
 
