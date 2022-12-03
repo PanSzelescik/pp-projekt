@@ -143,9 +143,8 @@ void processDeleteSelection(Order &order) {
     }
 }
 
-void processMenuSelection() {
+void processMenuSelection(Order &order) {
     auto menu = readMenu();
-    Order order;
 
     while (true) {
         printMenu(menu, order);
@@ -219,8 +218,53 @@ void addUTF8Support() {
 int main() {
     addUTF8Support();
 
-    cout << "PODANIE WSTEPNYCH DANYCH WKROTCE! ęąśźćż" << endl;
-    // TODO Podanie wstepnych danych
-    processMenuSelection();
+    string name, adres;
+    int status, stolik;
+
+    cout << "Witamy w gospodzie \"Pod Głupim Osłem\"!" << endl;
+    cout << "Adres: Bagienna 5, 21-370 Zasiedmiogorogród" << endl;
+    cout << "Właściciel: Shrek Kerhs" << endl;
+    cout << "Tel.: +48 732 054 143" << endl;
+    cout << "Email: 1s8xhb@gmail.com" << endl;
+    cout << "Godziny otwarcia: od poniedziałku do soboty, 10:00 - 22:00" << endl;
+    // TODO godziny otwarcia
+
+    cout << "\nPodaj swoje imię: ";
+    cin >> name;
+    cout << "\nWitaj " << name << endl;
+
+    cout << "\nCzy danie ma być na miejscu czy na dowóz?" << endl;
+    cout << "[1] Na miejscu" << endl;
+    cout << "[2] Na dowóz" << endl;
+    cin >> status;
+
+    Order order;
+    order.name = name;
+    order.status = status;
+
+    while (true) {
+        if (status == 1) {
+            cout << "\nWybierz numer stolika" << endl;
+            cin >> stolik;
+            // TODO if stolik
+            cout << "\nWybrałeś stolik numer " << stolik << endl;
+            order.stolik = stolik;
+            break;
+        }
+
+        if (status == 2) {
+            cout << "\nPodaj adres na który mamy dostarczyc posilek" << endl;
+            getline(cin >> ws, adres);
+            order.address = adres;
+            cout << "\nTwój adres to:" << endl;
+            cout << adres << endl;
+            break;
+        }
+
+        cout << "Wybrałeś złą opcje!" << endl;
+    }
+
+    processMenuSelection(order);
+
     return 0;
 }

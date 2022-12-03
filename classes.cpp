@@ -28,6 +28,10 @@ public:
 class Order {
 public:
     vector<Selection> selections = vector<Selection>{};
+    int status;
+    string address;
+    string name;
+    int stolik;
 
     double value() const {
         double value = 0;
