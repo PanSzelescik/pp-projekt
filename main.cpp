@@ -2,19 +2,28 @@
 #include <iomanip>
 #include <iostream>
 #include <string>
-#include <sstream>
 #include <vector>
 
 using namespace std;
 
 static const string FILE_NAME = "menu.txt";
 
+string toLowercase(string s) {
+    return string(1, (char) tolower(s.at(0)));
+}
+
 static const string CONTINUE_CHAR = "X";
-static const string CONTINUE_CHAR_LOWER = string(1, (char) tolower(CONTINUE_CHAR.at(0)));
+static const string CONTINUE_CHAR_LOWER = toLowercase(CONTINUE_CHAR);
 static const string EXIT_CHAR = "Q";
-static const string EXIT_CHAR_LOWER = string(1, (char) tolower(EXIT_CHAR.at(0)));
+static const string EXIT_CHAR_LOWER = toLowercase(EXIT_CHAR);
 static const string DELETE_CHAR = "D";
-static const string DELETE_CHAR_LOWER = string(1, (char) tolower(DELETE_CHAR.at(0)));
+static const string DELETE_CHAR_LOWER = toLowercase(DELETE_CHAR);
+static const string BACK_CHAR = "P";
+static const string BACK_CHAR_LOWER = toLowercase(BACK_CHAR);
+static const string YES_CHAR = "T";
+static const string YES_CHAR_LOWER = toLowercase(YES_CHAR);
+static const string NO_CHAR = "N";
+static const string NO_CHAR_LOWER = toLowercase(NO_CHAR);
 
 class Dish {
 public:
@@ -30,7 +39,7 @@ public:
     int amount{};
 
     double value() const {
-        return this->dish.value * this->amount;
+        return this->dish.value * (double) this->amount;
     }
 };
 
@@ -51,6 +60,21 @@ public:
         selection.amount = amount;
         selection.dish = dish;
         this->selections.push_back(selection);
+    }
+
+    void remove(size_t index) {
+        vector<Selection> newSelections;
+
+        for (auto i = 0; i < this->selections.size(); i++) {
+            if (i == index) {
+                continue;
+            }
+
+            auto item = this->selections[i];
+            newSelections.push_back(item);
+        }
+
+        this->selections = newSelections;
     }
 
     bool empty() const {
@@ -82,8 +106,8 @@ int safeStringToInt(const string &str) {
     }
 }
 
-int indexOfMenu(const string &choice) {
-    int number = safeStringToInt(choice);
+int stringToIndex(const string &choice) {
+    auto number = safeStringToInt(choice);
     return number == -1 ? number : number - 1;
 }
 
@@ -129,20 +153,85 @@ vector<Dish> readMenu() {
     return menu;
 }
 
-void printMenu(const vector<Dish> &menu, const Order &order) {
+void printTotalCount(const Order &order) {
     cout << "Aktualna cena: " << doubleToString(order.value()) << endl;
+}
+
+string getDishString(const Dish& dish) {
+    stringstream ss;
+    ss << dish.name << " (" << dish.ingredients << "), " << doubleToString(dish.value);
+    return ss.str();
+}
+
+string getDishStringWithAmount(const Dish& dish, int amount) {
+    stringstream ss;
+    ss << dish.name << ", " << amount << " x " << doubleToString(dish.value) << ", lacznie: " << doubleToString(dish.value * (double) amount);
+    return ss.str();
+}
+
+string getSelectionString(const Selection& selection) {
+    return getDishStringWithAmount(selection.dish, selection.amount);
+}
+
+void printMenu(const vector<Dish> &menu, const Order &order) {
+    printTotalCount(order);
     cout << "Menu:" << endl;
-    for (size_t i = 0; i < menu.size(); i++) {
-        Dish item = menu[i];
-        cout << "[" << i + 1 << "] " << item.name << " (" << item.ingredients << "), " << doubleToString(item.value) << endl;
+    for (auto i = 0; i < menu.size(); i++) {
+        cout << "[" << i + 1 << "] " << getDishString(menu[i]) << endl;
     }
     cout << "[" << DELETE_CHAR << "] Usuwanie dodanych pozycji" << endl;
     cout << "[" << CONTINUE_CHAR << "] Kontynuuj" << endl;
     cout << "[" << EXIT_CHAR << "] Wyjdz bez zamowienia" << endl;
 }
 
-void processDeleteSelection() {
-    // TODO
+void printSelectionForDelete(const Order &order) {
+    printTotalCount(order);
+    cout << "Menu:" << endl;
+    for (auto i = 0; i < order.selections.size(); i++) {
+        cout << "[" << i + 1 << "] " << getSelectionString(order.selections[i]) << endl;
+    }
+    cout << "[" << BACK_CHAR << "] Powrot" << endl;
+    cout << "[" << EXIT_CHAR << "] Wyjdz bez zamowienia" << endl;
+}
+
+void processDeleteSelection(Order &order) {
+    while (true) {
+        printSelectionForDelete(order);
+        string choice;
+        cin >> choice;
+
+        if (choice == EXIT_CHAR || choice == EXIT_CHAR_LOWER) {
+            cout << "Zapraszamy ponownie!" << endl;
+            return;
+        }
+
+        if (choice == BACK_CHAR || choice == BACK_CHAR_LOWER) {
+            break;
+        }
+
+        auto index = stringToIndex(choice);
+        if (index >= 0 && index < order.selections.size()) {
+            cout << "Czy na pewno chcesz usunac:" << endl;
+            auto selection = order.selections[index];
+            cout << getSelectionString(selection) << endl;
+
+            cout << "Potwierdz wpisujac T (tak) lub N (nie): " << endl;
+            string zatwierdzenie;
+            cin >> zatwierdzenie;
+
+            if (zatwierdzenie == YES_CHAR || zatwierdzenie == YES_CHAR_LOWER) {
+                order.remove(index);
+                continue;
+            }
+
+            if (zatwierdzenie == NO_CHAR || zatwierdzenie == NO_CHAR_LOWER) {
+                cout << "Nie usuwam!" << endl;
+                continue;
+            }
+        }
+
+        cout << "Podaj prawidlowa opcje lub numer pozycji!" << endl;
+    }
 }
 
 void processMenuSelection() {
@@ -154,18 +243,19 @@ void processMenuSelection() {
         string choice;
         cin >> choice;
 
+        if (choice == EXIT_CHAR || choice == EXIT_CHAR_LOWER) {
+            cout << "Zapraszamy ponownie!" << endl;
+            return;
+        }
+
         if (choice == CONTINUE_CHAR || choice == CONTINUE_CHAR_LOWER) {
             if (order.empty()) {
                 cout << "Nic nie wybrales!" << endl;
                 continue;
             }
 
+            cout << "PODSUMOWANIE ZAMOWIENIA WKROTCE!" << endl;
             // TODO Podsumowanie zamowienia
-            return;
-        }
-
-        if (choice == EXIT_CHAR || choice == EXIT_CHAR_LOWER) {
-            cout << "Zapraszamy ponownie!" << endl;
             return;
         }
 
@@ -175,11 +265,11 @@ void processMenuSelection() {
                 continue;
             }
 
-            processDeleteSelection();
+            processDeleteSelection(order);
             continue;
         }
 
-        int index = indexOfMenu(choice);
+        auto index = stringToIndex(choice);
         if (index >= 0 && index < menu.size()) {
             cout << "Ile chcesz porcji?" << endl;
             string amountString;
@@ -191,8 +281,26 @@ void processMenuSelection() {
                 continue;
             }
 
-            order.add(menu[index], amount);
-            cout << "Dodano!" << endl;
+            cout << "Czy na pewno chcesz dodac:" << endl;
+            auto dish = menu[index];
+            cout << getDishStringWithAmount(dish, amount) << endl;
+
+            cout << "Potwierdz wpisujac T (tak) lub N (nie): " << endl;
+            string zatwierdzenie;
+            cin >> zatwierdzenie;
+
+            if (zatwierdzenie == YES_CHAR || zatwierdzenie == YES_CHAR_LOWER) {
+                order.add(dish, amount);
+                cout << "Dodano!" << endl;
+                continue;
+            }
+
+            if (zatwierdzenie == NO_CHAR || zatwierdzenie == NO_CHAR_LOWER) {
+                cout << "Nie dodaje!" << endl;
+                continue;
+            }
+
+            cout << "Nie podales prawidlowej opcji!" << endl;
             continue;
         }
 
@@ -201,6 +309,7 @@ void processMenuSelection() {
 }
 
 int main() {
+    cout << "PODANIE WSTEPNYCH DANYCH WKROTCE!" << endl;
     // TODO Podanie wstepnych danych
     processMenuSelection();
     return 0;
