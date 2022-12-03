@@ -1,10 +1,10 @@
 Zupa z oczu;oczy, woda;11;5
-Udka z goblina;mięso z gobilina, przyprawy;16;10
-Spaghetti z ogonów szczura w sosie pomidorowym;ogony szczura, pomidory;17;20
-Pieczeń z dzika;dzik, włoszczyzna;35;60
-Sałatka;sałata, ogórek, rukola, ser kozi, pomidor, papryka, kukurydza;20;5
-Gołąbki z gołębi;kapusta, gołąb;18;20
-Wątróbka z niedźwiedzia;niedźwiedź, cebula;25;25
+Udka z goblina;mieso z gobilina, przyprawy;16;10
+Spaghetti z ogonow szczura w sosie pomidorowym;ogony szczura, pomidory;17;20
+Pieczen z dzika;dzik, wloszczyzna;35;60
+Salatka;salata, ogorek, rukola, ser kozi, pomidor, papryka, kukurydza;20;5
+Golabki z golebi;kapusta, golab;18;20
+Watrobka z niedzwiedzia;niedzwiedz, cebula;25;25
 Cebulanka (zupa z cebuli);cebula, woda;10;5
 Filet z wieloryba (GIGA PORCJA);wieloryb, przyprawy;50;6
-Dżdżownice na głebokim tłuszczu z jaka;dżdżownice, tłuszcz z jaka;8;10
+Dzdzownice na glebokim tluszczu z jaka;dzdzownice, tluszcz z jaka;8;10

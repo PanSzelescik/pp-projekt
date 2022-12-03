@@ -119,9 +119,9 @@ vector<Dish> readMenu() {
             dish.minutes = stoi(minutes);
 
             menu.push_back(dish);
-        } else {
-            break;
+            continue;
         }
+        break;
     }
 
     menuFile.close();
