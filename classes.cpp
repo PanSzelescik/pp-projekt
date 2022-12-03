@@ -1,3 +1,6 @@
+#ifndef classes_cpp
+#define classes_cpp
+
 #include <string>
 #include <vector>
 
@@ -17,7 +20,7 @@ public:
     int amount{};
 
     double value() const {
-        return this->dish.value * (double) this->amount;
+        return this->dish.value * (double)this->amount;
     }
 };
 
@@ -27,7 +30,7 @@ public:
 
     double value() const {
         double value = 0;
-        for (const auto &selection: this->selections) {
+        for (const auto& selection : this->selections) {
             value += selection.value();
         }
         return value;
@@ -61,7 +64,7 @@ public:
 
     int getMaxMinutes() const {
         int minutes = 0;
-        for (const auto &selection: this->selections) {
+        for (const auto& selection : this->selections) {
             if (selection.dish.minutes > minutes) {
                 minutes = selection.dish.minutes;
             }
@@ -69,3 +72,5 @@ public:
         return minutes;
     }
 };
+
+#endif

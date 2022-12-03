@@ -22,8 +22,12 @@
     <Text Include="menu.txt" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="classes.cpp" />
     <ClCompile Include="main.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="classes.cpp" />
+    <ClInclude Include="consts.cpp" />
+    <ClInclude Include="utils.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>

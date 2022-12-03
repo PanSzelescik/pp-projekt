@@ -1,50 +1,13 @@
 #include <fstream>
-#include <iomanip>
 #include <iostream>
 #include <sstream>
 #include <string>
 #include <vector>
 #include "classes.cpp"
+#include "consts.cpp"
+#include "utils.cpp"
 
 using namespace std;
-
-static const string FILE_NAME = "menu.txt";
-
-string toLowercase(string s) {
-    return string(1, (char) tolower(s.at(0)));
-}
-
-static const string CONTINUE_CHAR = "X";
-static const string CONTINUE_CHAR_LOWER = toLowercase(CONTINUE_CHAR);
-static const string EXIT_CHAR = "Q";
-static const string EXIT_CHAR_LOWER = toLowercase(EXIT_CHAR);
-static const string DELETE_CHAR = "D";
-static const string DELETE_CHAR_LOWER = toLowercase(DELETE_CHAR);
-static const string BACK_CHAR = "P";
-static const string BACK_CHAR_LOWER = toLowercase(BACK_CHAR);
-static const string YES_CHAR = "T";
-static const string YES_CHAR_LOWER = toLowercase(YES_CHAR);
-static const string NO_CHAR = "N";
-static const string NO_CHAR_LOWER = toLowercase(NO_CHAR);
-
-string doubleToString(const double &d) {
-    stringstream stream;
-    stream << fixed << setprecision(2) << d;
-    return stream.str();
-}
-
-int safeStringToInt(const string &str) {
-    try {
-        return stoi(str);
-    } catch (invalid_argument) {
-        return -1;
-    }
-}
-
-int stringToIndex(const string &choice) {
-    auto number = safeStringToInt(choice);
-    return number == -1 ? number : number - 1;
-}
 
 vector<Dish> readMenu() {
     vector<Dish> menu;
@@ -175,7 +138,7 @@ void processDeleteSelection(Order &order) {
 }
 
 void processMenuSelection() {
-    vector<Dish> menu = readMenu();
+    auto menu = readMenu();
     Order order;
 
     while (true) {
