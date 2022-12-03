@@ -90,7 +90,7 @@ void printMenu(const vector<Dish> &menu, const Order &order) {
 
 void printSelectionForDelete(const Order &order) {
     printTotalCount(order);
-    cout << "Menu:" << endl;
+    cout << "Twoje zamówienie:" << endl;
     for (auto i = 0; i < order.selections.size(); i++) {
         cout << "[" << i + 1 << "] " << getSelectionString(order.selections[i]) << endl;
     }
@@ -158,11 +158,6 @@ void processMenuSelection() {
         }
 
         if (choice == CONTINUE_CHAR || choice == CONTINUE_CHAR_LOWER) {
-            if (order.empty()) {
-                cout << "Nic nie wybrałeś!" << endl;
-                continue;
-            }
-
             processSummary(order);
             return;
         }
