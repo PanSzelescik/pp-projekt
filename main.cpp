@@ -40,7 +40,7 @@ public:
 
     double value() const {
         double value = 0;
-        for (const auto& selection : this->selections) {
+        for (const auto &selection: this->selections) {
             value += selection.value();
         }
         return value;
@@ -55,7 +55,7 @@ public:
 
     int getMaxMinutes() const {
         int minutes = 0;
-        for (const auto& selection : this->selections) {
+        for (const auto &selection: this->selections) {
             if (selection.dish.minutes > minutes) {
                 minutes = selection.dish.minutes;
             }
@@ -64,13 +64,13 @@ public:
     }
 };
 
-string doubleToString(const double& d) {
+string doubleToString(const double &d) {
     stringstream stream;
     stream << fixed << setprecision(2) << d;
     return stream.str();
 }
 
-int indexOfMenu(const string& choice) {
+int indexOfMenu(const string &choice) {
     try {
         int number = std::stoi(choice);
         return number - 1;
@@ -87,7 +87,7 @@ vector<Dish> readMenu() {
     menuFile.open(FILE_NAME, ios::in);
 
     if (!menuFile.good()) {
-        throw runtime_error("Nie mo�na wczyta� menu!");
+        throw runtime_error("Nie mozna wczytac menu!");
     }
 
     string line;
@@ -112,8 +112,7 @@ vector<Dish> readMenu() {
             dish.minutes = stoi(minutes);
 
             menu.push_back(dish);
-        }
-        else {
+        } else {
             break;
         }
     }
@@ -123,17 +122,17 @@ vector<Dish> readMenu() {
     return menu;
 }
 
-void printMenu(const vector<Dish>& menu, const Order& order) {
+void printMenu(const vector<Dish> &menu, const Order &order) {
     cout << "Aktualna cena: " << doubleToString(order.value()) << endl;
     cout << "Menu:" << endl;
     for (size_t i = 0; i < menu.size(); i++) {
         Dish item = menu[i];
         cout << "[" << i + 1 << "] " << item.name << " (" << item.ingredients << "), " << doubleToString(item.value)
-            << endl;
+             << endl;
     }
     cout << "[" << DELETE_CHAR << "] Usuwanie dodanych pozycji" << endl;
     cout << "[" << CONTINUE_CHAR << "] Kontynuuj" << endl;
-    cout << "[" << EXIT_CHAR << "] Wyjd� bez zam�wienia" << endl;
+    cout << "[" << EXIT_CHAR << "] Wyjdz bez zamowienia" << endl;
 }
 
 int processMenuSelection() {
@@ -152,18 +151,15 @@ int processMenuSelection() {
             }
             // TODO Dalszy proces zamowienia
             break;
-        }
-        else if (choice == EXIT_CHAR || choice == EXIT_CHAR_LOWER) {
+        } else if (choice == EXIT_CHAR || choice == EXIT_CHAR_LOWER) {
             cout << "Zapraszamy ponownie!" << endl;
             return 0;
-        }
-        else if (choice == DELETE_CHAR || choice == DELETE_CHAR_LOWER) {
+        } else if (choice == DELETE_CHAR || choice == DELETE_CHAR_LOWER) {
             if (menu.empty()) {
                 cout << "Nic nie wybrales!" << endl;
                 continue;
             }
-        }
-        else {
+        } else {
             int index = indexOfMenu(choice);
             if (index >= 0 && index < menu.size()) {
                 cout << "Ile chcesz porcji?" << endl;
@@ -171,8 +167,7 @@ int processMenuSelection() {
                 cin >> amount;
                 order.add(menu[index], amount);
                 cout << "Dodano!" << endl;
-            }
-            else {
+            } else {
                 cout << "Podaj prawidlowy numer dania!" << endl;
                 continue;
             }
@@ -183,5 +178,5 @@ int processMenuSelection() {
 }
 
 int main() {
-	return processMenuSelection();
+    return processMenuSelection();
 }
