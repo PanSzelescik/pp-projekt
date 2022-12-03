@@ -1,3 +1,4 @@
+#pragma once
 #ifndef classes_cpp
 #define classes_cpp
 

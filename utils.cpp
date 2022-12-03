@@ -1,3 +1,4 @@
+#pragma once
 #ifndef utils_cpp
 #define utils_cpp
 

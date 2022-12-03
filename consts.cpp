@@ -1,3 +1,4 @@
+#pragma once
 #ifndef consts_cpp
 #define consts_cpp
 
