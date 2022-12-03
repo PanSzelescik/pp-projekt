@@ -53,6 +53,10 @@ public:
         this->selections.push_back(selection);
     }
 
+    bool empty() const {
+        return this->selections.empty();
+    }
+
     int getMaxMinutes() const {
         int minutes = 0;
         for (const auto &selection: this->selections) {
@@ -127,15 +131,14 @@ void printMenu(const vector<Dish> &menu, const Order &order) {
     cout << "Menu:" << endl;
     for (size_t i = 0; i < menu.size(); i++) {
         Dish item = menu[i];
-        cout << "[" << i + 1 << "] " << item.name << " (" << item.ingredients << "), " << doubleToString(item.value)
-             << endl;
+        cout << "[" << i + 1 << "] " << item.name << " (" << item.ingredients << "), " << doubleToString(item.value) << endl;
     }
     cout << "[" << DELETE_CHAR << "] Usuwanie dodanych pozycji" << endl;
     cout << "[" << CONTINUE_CHAR << "] Kontynuuj" << endl;
     cout << "[" << EXIT_CHAR << "] Wyjdz bez zamowienia" << endl;
 }
 
-int processMenuSelection() {
+void processMenuSelection() {
     vector<Dish> menu = readMenu();
     Order order;
 
@@ -145,17 +148,17 @@ int processMenuSelection() {
         cin >> choice;
 
         if (choice == CONTINUE_CHAR || choice == CONTINUE_CHAR_LOWER) {
-            if (menu.empty()) {
+            if (order.empty()) {
                 cout << "Nic nie wybrales!" << endl;
                 continue;
             }
-            // TODO Dalszy proces zamowienia
+            // TODO Podsumowanie zamowienia
             break;
         } else if (choice == EXIT_CHAR || choice == EXIT_CHAR_LOWER) {
             cout << "Zapraszamy ponownie!" << endl;
-            return 0;
+            return;
         } else if (choice == DELETE_CHAR || choice == DELETE_CHAR_LOWER) {
-            if (menu.empty()) {
+            if (order.empty()) {
                 cout << "Nic nie wybrales!" << endl;
                 continue;
             }
@@ -173,10 +176,10 @@ int processMenuSelection() {
             }
         }
     }
-
-    return 0;
 }
 
 int main() {
-    return processMenuSelection();
+    // TODO Podanie wstepnych danych
+    processMenuSelection();
+    return 0;
 }
