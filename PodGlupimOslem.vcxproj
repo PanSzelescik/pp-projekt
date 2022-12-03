@@ -22,6 +22,7 @@
     <Text Include="menu.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="classes.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

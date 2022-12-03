@@ -4,6 +4,7 @@
 #include <sstream>
 #include <string>
 #include <vector>
+#include "classes.cpp"
 
 using namespace std;
 
@@ -25,73 +26,6 @@ static const string YES_CHAR = "T";
 static const string YES_CHAR_LOWER = toLowercase(YES_CHAR);
 static const string NO_CHAR = "N";
 static const string NO_CHAR_LOWER = toLowercase(NO_CHAR);
-
-class Dish {
-public:
-    string name;
-    string ingredients;
-    double value{};
-    int minutes{};
-};
-
-class Selection {
-public:
-    Dish dish;
-    int amount{};
-
-    double value() const {
-        return this->dish.value * (double) this->amount;
-    }
-};
-
-class Order {
-public:
-    vector<Selection> selections = vector<Selection>{};
-
-    double value() const {
-        double value = 0;
-        for (const auto &selection: this->selections) {
-            value += selection.value();
-        }
-        return value;
-    }
-
-    void add(Dish dish, int amount) {
-        Selection selection;
-        selection.amount = amount;
-        selection.dish = dish;
-        this->selections.push_back(selection);
-    }
-
-    void remove(size_t index) {
-        vector<Selection> newSelections;
-
-        for (auto i = 0; i < this->selections.size(); i++) {
-            if (i == index) {
-                continue;
-            }
-
-            auto item = this->selections[i];
-            newSelections.push_back(item);
-        }
-
-        this->selections = newSelections;
-    }
-
-    bool empty() const {
-        return this->selections.empty();
-    }
-
-    int getMaxMinutes() const {
-        int minutes = 0;
-        for (const auto &selection: this->selections) {
-            if (selection.dish.minutes > minutes) {
-                minutes = selection.dish.minutes;
-            }
-        }
-        return minutes;
-    }
-};
 
 string doubleToString(const double &d) {
     stringstream stream;
@@ -195,6 +129,11 @@ void printSelectionForDelete(const Order &order) {
     cout << "[" << EXIT_CHAR << "] Wyjdz bez zamowienia" << endl;
 }
 
+void processSummary(const Order &order) {
+    cout << "PODSUMOWANIE ZAMOWIENIA WKROTCE!" << endl;
+    // TODO Podsumowanie zamowienia
+}
+
 void processDeleteSelection(Order &order) {
     while (true) {
         printSelectionForDelete(order);
@@ -255,8 +194,7 @@ void processMenuSelection() {
                 continue;
             }
 
-            cout << "PODSUMOWANIE ZAMOWIENIA WKROTCE!" << endl;
-            // TODO Podsumowanie zamowienia
+            processSummary(order);
             return;
         }
 
