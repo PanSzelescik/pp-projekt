@@ -74,14 +74,17 @@ string doubleToString(const double &d) {
     return stream.str();
 }
 
-int indexOfMenu(const string &choice) {
+int safeStringToInt(const string &str) {
     try {
-        int number = std::stoi(choice);
-        return number - 1;
-    }
-    catch (invalid_argument) {
+        return stoi(str);
+    } catch (invalid_argument) {
         return -1;
     }
+}
+
+int indexOfMenu(const string &choice) {
+    int number = safeStringToInt(choice);
+    return number == -1 ? number : number - 1;
 }
 
 vector<Dish> readMenu() {
@@ -138,13 +141,17 @@ void printMenu(const vector<Dish> &menu, const Order &order) {
     cout << "[" << EXIT_CHAR << "] Wyjdz bez zamowienia" << endl;
 }
 
+void processDeleteSelection() {
+    // TODO
+}
+
 void processMenuSelection() {
     vector<Dish> menu = readMenu();
     Order order;
 
-    string choice;
     while (true) {
         printMenu(menu, order);
+        string choice;
         cin >> choice;
 
         if (choice == CONTINUE_CHAR || choice == CONTINUE_CHAR_LOWER) {
@@ -152,29 +159,44 @@ void processMenuSelection() {
                 cout << "Nic nie wybrales!" << endl;
                 continue;
             }
+
             // TODO Podsumowanie zamowienia
-            break;
-        } else if (choice == EXIT_CHAR || choice == EXIT_CHAR_LOWER) {
+            return;
+        }
+
+        if (choice == EXIT_CHAR || choice == EXIT_CHAR_LOWER) {
             cout << "Zapraszamy ponownie!" << endl;
             return;
-        } else if (choice == DELETE_CHAR || choice == DELETE_CHAR_LOWER) {
+        }
+
+        if (choice == DELETE_CHAR || choice == DELETE_CHAR_LOWER) {
             if (order.empty()) {
                 cout << "Nic nie wybrales!" << endl;
                 continue;
             }
-        } else {
-            int index = indexOfMenu(choice);
-            if (index >= 0 && index < menu.size()) {
-                cout << "Ile chcesz porcji?" << endl;
-                int amount;
-                cin >> amount;
-                order.add(menu[index], amount);
-                cout << "Dodano!" << endl;
-            } else {
-                cout << "Podaj prawidlowy numer dania!" << endl;
+
+            processDeleteSelection();
+            continue;
+        }
+
+        int index = indexOfMenu(choice);
+        if (index >= 0 && index < menu.size()) {
+            cout << "Ile chcesz porcji?" << endl;
+            string amountString;
+            cin >> amountString;
+
+            int amount = safeStringToInt(amountString);
+            if (amount < 1) {
+                cout << "Nieprawidlowa wartosc!" << endl;
                 continue;
             }
+
+            order.add(menu[index], amount);
+            cout << "Dodano!" << endl;
+            continue;
         }
+
+        cout << "Podaj prawidlowa opcje lub numer dania!" << endl;
     }
 }
 
