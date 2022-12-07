@@ -9,6 +9,7 @@
 #include "consts.cpp"
 #include "utils.cpp"
 #include <ctime>
+#include <conio.h>
 
 #pragma warning(disable : 4996)
 
@@ -103,8 +104,19 @@ void printSelectionForDelete(const Order &order) {
 }
 
 void processSummary(const Order &order) {
-    cout << "\nPODSUMOWANIE ZAMóWIENIA WKRóTCE!" << endl;
-    // TODO Podsumowanie zamowienia
+    fstream receiptFile;
+    receiptFile.open(FILE_NAME_RECEIPT, fstream::in | fstream::out | fstream::trunc);
+    receiptFile << "Czas oczekiwania: " << order.getMaxMinutes() << " minut\n";
+    receiptFile << "Łączny koszt: " << doubleToString(order.value()) << "\n";
+    receiptFile << "Zamówienie:\n\n";
+    for (auto i = 0; i < order.selections.size(); i++) {
+        receiptFile << "[" << i + 1 << "] " << getSelectionString(order.selections[i]) << endl;
+    }
+    receiptFile.close();
+    cout << "\nPrognozowany czas oczekiwania to: " << order.getMaxMinutes() << " minut" << endl;
+    cout << "Paragon został zapisany" << endl;
+    cout << "Wciśnij dowolny klawisz, aby zakończyć" << endl;
+    getch();
 }
 
 void processDeleteSelection(Order &order) {
@@ -275,6 +287,11 @@ int main() {
                 }
 
                 cout << "\nWybrałeś złą opcje!" << endl;
+                cout << "\nCzy danie ma być na miejscu czy na dowóz?" << endl;
+                cout << "[1] Na miejscu" << endl;
+                cout << "[2] Na dowóz" << endl;
+                cin >> status;
+                order.status = status;
             }
             processMenuSelection(order);
         } else {

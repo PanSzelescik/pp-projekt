@@ -8,6 +8,7 @@
 using namespace std;
 
 static const string FILE_NAME = "menu.txt";
+static const string FILE_NAME_RECEIPT = "receipt.txt";
 
 static const string CONTINUE_CHAR = "X";
 static const string CONTINUE_CHAR_LOWER = toLowercase(CONTINUE_CHAR);
