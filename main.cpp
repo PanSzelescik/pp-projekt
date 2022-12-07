@@ -8,6 +8,9 @@
 #include "classes.cpp"
 #include "consts.cpp"
 #include "utils.cpp"
+#include <ctime>
+
+#pragma warning(disable : 4996)
 
 using namespace std;
 
@@ -54,7 +57,7 @@ vector<Dish> readMenu() {
 }
 
 void printTotalCount(const Order &order) {
-    cout << "Aktualna cena: " << doubleToString(order.value()) << endl;
+    cout << "\nAktualna cena: " << doubleToString(order.value()) << endl;
 }
 
 void printExit() {
@@ -69,7 +72,8 @@ string getDishString(const Dish &dish) {
 
 string getDishStringWithAmount(const Dish &dish, int amount) {
     stringstream ss;
-    ss << dish.name << ", " << amount << " x " << doubleToString(dish.value) << ", łącznie: " << doubleToString(dish.value * (double) amount);
+    ss << dish.name << ", " << amount << " x " << doubleToString(dish.value) << ", łącznie: "
+       << doubleToString(dish.value * (double) amount);
     return ss.str();
 }
 
@@ -99,7 +103,7 @@ void printSelectionForDelete(const Order &order) {
 }
 
 void processSummary(const Order &order) {
-    cout << "PODSUMOWANIE ZAMóWIENIA WKRóTCE!" << endl;
+    cout << "\nPODSUMOWANIE ZAMóWIENIA WKRóTCE!" << endl;
     // TODO Podsumowanie zamowienia
 }
 
@@ -110,7 +114,7 @@ void processDeleteSelection(Order &order) {
         cin >> choice;
 
         if (choice == EXIT_CHAR || choice == EXIT_CHAR_LOWER) {
-            cout << "Zapraszamy ponownie!" << endl;
+            cout << "\nZapraszamy ponownie!" << endl;
             return;
         }
 
@@ -120,7 +124,7 @@ void processDeleteSelection(Order &order) {
 
         auto index = stringToIndex(choice);
         if (index >= 0 && index < order.selections.size()) {
-            cout << "Czy na pewno chcesz usunąć:" << endl;
+            cout << "\nCzy na pewno chcesz usunąć:" << endl;
             auto selection = order.selections[index];
             cout << getSelectionString(selection) << endl;
 
@@ -129,17 +133,18 @@ void processDeleteSelection(Order &order) {
             cin >> zatwierdzenie;
 
             if (zatwierdzenie == YES_CHAR || zatwierdzenie == YES_CHAR_LOWER) {
+                cout << "\nUsuwam!" << endl;
                 order.remove(index);
                 continue;
             }
 
             if (zatwierdzenie == NO_CHAR || zatwierdzenie == NO_CHAR_LOWER) {
-                cout << "Nie usuwam!" << endl;
+                cout << "\nNie usuwam!" << endl;
                 continue;
             }
         }
 
-        cout << "Podaj prawidłową opcję lub numer pozycji!" << endl;
+        cout << "\nPodaj prawidłową opcję lub numer pozycji!" << endl;
     }
 }
 
@@ -152,7 +157,7 @@ void processMenuSelection(Order &order) {
         cin >> choice;
 
         if (choice == EXIT_CHAR || choice == EXIT_CHAR_LOWER) {
-            cout << "Zapraszamy ponownie!" << endl;
+            cout << "\nZapraszamy ponownie!" << endl;
             return;
         }
 
@@ -163,7 +168,7 @@ void processMenuSelection(Order &order) {
 
         if (choice == DELETE_CHAR || choice == DELETE_CHAR_LOWER) {
             if (order.empty()) {
-                cout << "Nic nie wybrałeś!" << endl;
+                cout << "\nNic nie wybrałeś!" << endl;
                 continue;
             }
 
@@ -173,17 +178,17 @@ void processMenuSelection(Order &order) {
 
         auto index = stringToIndex(choice);
         if (index >= 0 && index < menu.size()) {
-            cout << "Ile chcesz porcji?" << endl;
+            cout << "\nIle chcesz porcji?" << endl;
             string amountString;
             cin >> amountString;
 
             int amount = safeStringToInt(amountString);
             if (amount < 1) {
-                cout << "Nieprawidłową wartość!" << endl;
+                cout << "\nNieprawidłowa wartość!" << endl;
                 continue;
             }
 
-            cout << "Czy na pewno chcesz dodać:" << endl;
+            cout << "\nCzy na pewno chcesz dodać:" << endl;
             auto dish = menu[index];
             cout << getDishStringWithAmount(dish, amount) << endl;
 
@@ -193,20 +198,20 @@ void processMenuSelection(Order &order) {
 
             if (zatwierdzenie == YES_CHAR || zatwierdzenie == YES_CHAR_LOWER) {
                 order.add(dish, amount);
-                cout << "Dodano!" << endl;
+                cout << "\nDodano!" << endl;
                 continue;
             }
 
             if (zatwierdzenie == NO_CHAR || zatwierdzenie == NO_CHAR_LOWER) {
-                cout << "Nie dodaję!" << endl;
+                cout << "\nNie dodaję!" << endl;
                 continue;
             }
 
-            cout << "Nie podałeś prawidłowej opcji!" << endl;
+            cout << "\nNie podałeś prawidłowej opcji!" << endl;
             continue;
         }
 
-        cout << "Podaj prawidłową opcję lub numer dania!" << endl;
+        cout << "\nPodaj prawidłową opcję lub numer dania!" << endl;
     }
 }
 
@@ -221,50 +226,63 @@ int main() {
     string name, adres;
     int status, stolik;
 
+    time_t currentTime = time(nullptr);
+    tm *localTime = localtime(&currentTime);
+
     cout << "Witamy w gospodzie \"Pod Głupim Osłem\"!" << endl;
     cout << "Adres: Bagienna 5, 21-370 Zasiedmiogorogród" << endl;
     cout << "Właściciel: Shrek Kerhs" << endl;
     cout << "Tel.: +48 732 054 143" << endl;
     cout << "Email: 1s8xhb@gmail.com" << endl;
     cout << "Godziny otwarcia: od poniedziałku do soboty, 10:00 - 22:00" << endl;
-    // TODO godziny otwarcia
 
-    cout << "\nPodaj swoje imię: ";
-    cin >> name;
-    cout << "\nWitaj " << name << endl;
+    if (localTime->tm_wday >= 1 && localTime->tm_wday <= 6) {
+        if (localTime->tm_hour >= 10 && localTime->tm_hour < 22) {
+            cout << "\nPodaj swoje imię: ";
+            cin >> name;
+            cout << "\nWitaj " << name << endl;
 
-    cout << "\nCzy danie ma być na miejscu czy na dowóz?" << endl;
-    cout << "[1] Na miejscu" << endl;
-    cout << "[2] Na dowóz" << endl;
-    cin >> status;
+            cout << "\nCzy danie ma być na miejscu czy na dowóz?" << endl;
+            cout << "[1] Na miejscu" << endl;
+            cout << "[2] Na dowóz" << endl;
+            cin >> status;
 
-    Order order;
-    order.name = name;
-    order.status = status;
+            Order order;
+            order.name = name;
+            order.status = status;
 
-    while (true) {
-        if (status == 1) {
-            cout << "\nWybierz numer stolika" << endl;
-            cin >> stolik;
-            // TODO if stolik
-            cout << "\nWybrałeś stolik numer " << stolik << endl;
-            order.stolik = stolik;
-            break;
+            while (true) {
+                if (status == 1) {
+                    cout << "\nWybierz numer stolika [1-15]" << endl;
+                    cin >> stolik;
+                    if (stolik >= 1 && stolik <= 15) {
+                        cout << "\nWybrano stolik numer " << stolik << endl;
+                        order.stolik = stolik;
+                        break;
+                    } else {
+                        cout << "\nWprowadzono niepoprawny numer stolika!" << endl;
+                        continue;
+                    }
+                }
+
+                if (status == 2) {
+                    cout << "\nPodaj adres na który mamy dostarczyć posiłek" << endl;
+                    getline(cin >> ws, adres);
+                    order.address = adres;
+                    cout << "\nTwój adres to:" << endl;
+                    cout << adres << endl;
+                    break;
+                }
+
+                cout << "\nWybrałeś złą opcje!" << endl;
+            }
+            processMenuSelection(order);
+        } else {
+            cout << "\nGospoda jest zamknięta, przyjdź gdy gospoda będzie otwarta!" << endl;
         }
-
-        if (status == 2) {
-            cout << "\nPodaj adres na który mamy dostarczyc posilek" << endl;
-            getline(cin >> ws, adres);
-            order.address = adres;
-            cout << "\nTwój adres to:" << endl;
-            cout << adres << endl;
-            break;
-        }
-
-        cout << "Wybrałeś złą opcje!" << endl;
+    } else {
+        cout << "\nGospoda jest zamknięta, przyjdź gdy gospoda będzie otwarta!" << endl;
     }
-
-    processMenuSelection(order);
 
     return 0;
 }
