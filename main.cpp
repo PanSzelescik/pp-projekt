@@ -106,6 +106,9 @@ void printSelectionForDelete(const Order &order) {
 void processSummary(const Order &order) {
     fstream receiptFile;
     receiptFile.open(FILE_NAME_RECEIPT, fstream::in | fstream::out | fstream::trunc);
+    if (order.status == 1) {
+        receiptFile << "Stolik: " << order.stolik << "\n";
+    }
     receiptFile << "Czas oczekiwania: " << order.getMaxMinutes() << " minut\n";
     receiptFile << "Łączny koszt: " << doubleToString(order.value()) << "\n";
     receiptFile << "Zamówienie:\n\n";
@@ -174,6 +177,11 @@ void processMenuSelection(Order &order) {
         }
 
         if (choice == CONTINUE_CHAR || choice == CONTINUE_CHAR_LOWER) {
+            if (order.empty()) {
+                cout << "\nNic nie wybrałeś!" << endl;
+                continue;
+            }
+
             processSummary(order);
             return;
         }
