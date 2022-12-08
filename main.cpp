@@ -85,7 +85,7 @@ string getSelectionString(const Selection &selection) {
 void printMenu(const vector<Dish> &menu, const Order &order) {
     printTotalCount(order);
     cout << "Menu:" << endl;
-    for (auto i = 0; i < menu.size(); i++) {
+    for (int i = 0; i < menu.size(); i++) {
         cout << "[" << i + 1 << "] " << getDishString(menu[i]) << endl;
     }
     cout << "[" << DELETE_CHAR << "] Usuwanie dodanych pozycji" << endl;
@@ -96,7 +96,7 @@ void printMenu(const vector<Dish> &menu, const Order &order) {
 void printSelectionForDelete(const Order &order) {
     printTotalCount(order);
     cout << "Twoje zamówienie:" << endl;
-    for (auto i = 0; i < order.selections.size(); i++) {
+    for (int i = 0; i < order.selections.size(); i++) {
         cout << "[" << i + 1 << "] " << getSelectionString(order.selections[i]) << endl;
     }
     cout << "[" << BACK_CHAR << "] Powrót" << endl;
@@ -109,7 +109,7 @@ void processSummary(const Order &order) {
     receiptFile << "Czas oczekiwania: " << order.getMaxMinutes() << " minut\n";
     receiptFile << "Łączny koszt: " << doubleToString(order.value()) << "\n";
     receiptFile << "Zamówienie:\n\n";
-    for (auto i = 0; i < order.selections.size(); i++) {
+    for (int i = 0; i < order.selections.size(); i++) {
         receiptFile << "[" << i + 1 << "] " << getSelectionString(order.selections[i]) << endl;
     }
     receiptFile.close();
@@ -134,10 +134,10 @@ void processDeleteSelection(Order &order) {
             break;
         }
 
-        auto index = stringToIndex(choice);
+        int index = stringToIndex(choice);
         if (index >= 0 && index < order.selections.size()) {
             cout << "\nCzy na pewno chcesz usunąć:" << endl;
-            auto selection = order.selections[index];
+            Selection selection = order.selections[index];
             cout << getSelectionString(selection) << endl;
 
             cout << "Potwierdź wpisując T (tak) lub N (nie): " << endl;
@@ -161,7 +161,7 @@ void processDeleteSelection(Order &order) {
 }
 
 void processMenuSelection(Order &order) {
-    auto menu = readMenu();
+    vector<Dish> menu = readMenu();
 
     while (true) {
         printMenu(menu, order);
@@ -188,7 +188,7 @@ void processMenuSelection(Order &order) {
             continue;
         }
 
-        auto index = stringToIndex(choice);
+        int index = stringToIndex(choice);
         if (index >= 0 && index < menu.size()) {
             cout << "\nIle chcesz porcji?" << endl;
             string amountString;
@@ -201,7 +201,7 @@ void processMenuSelection(Order &order) {
             }
 
             cout << "\nCzy na pewno chcesz dodać:" << endl;
-            auto dish = menu[index];
+            Dish dish = menu[index];
             cout << getDishStringWithAmount(dish, amount) << endl;
 
             cout << "Potwierdź wpisując T (tak) lub N (nie): " << endl;

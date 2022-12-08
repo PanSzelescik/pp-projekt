@@ -35,7 +35,7 @@ public:
 
     double value() const {
         double value = 0;
-        for (const auto& selection : this->selections) {
+        for (const Selection& selection : this->selections) {
             value += selection.value();
         }
         return value;
@@ -48,10 +48,10 @@ public:
         this->selections.push_back(selection);
     }
 
-    void remove(size_t index) {
+    void remove(int index) {
         vector<Selection> newSelections;
 
-        for (auto i = 0; i < this->selections.size(); i++) {
+        for (int i = 0; i < this->selections.size(); i++) {
             if (i == index) {
                 continue;
             }
