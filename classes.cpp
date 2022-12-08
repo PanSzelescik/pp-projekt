@@ -56,7 +56,7 @@ public:
                 continue;
             }
 
-            auto item = this->selections[i];
+            Selection item = this->selections[i];
             newSelections.push_back(item);
         }
 
@@ -69,7 +69,7 @@ public:
 
     int getMaxMinutes() const {
         int minutes = 0;
-        for (const auto& selection : this->selections) {
+        for (const Selection& selection : this->selections) {
             if (selection.dish.minutes > minutes) {
                 minutes = selection.dish.minutes;
             }
