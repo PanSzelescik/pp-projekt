@@ -110,7 +110,9 @@ void processSummary(const Order &order) {
         receiptFile << "Stolik: " << order.stolik << "\n";
     }
     receiptFile << "Czas oczekiwania: " << order.getMaxMinutes() << " minut\n";
-    receiptFile << "Zamówienie zostanie dostarczone na godzinę: " << order.godzinaDostawy << "\n";
+    if (order.status == 2) {
+        receiptFile << "Zamówienie zostanie dostarczone na godzinę: " << order.godzinaDostawy << "\n";
+    }
     receiptFile << "Łączny koszt: " << doubleToString(order.value()) << "\n";
     receiptFile << "Zamówienie:\n\n";
     for (int i = 0; i < order.selections.size(); i++) {
@@ -118,7 +120,9 @@ void processSummary(const Order &order) {
     }
     receiptFile.close();
     cout << "\nPrognozowany czas oczekiwania to: " << order.getMaxMinutes() << " minut" << endl;
-    cout << "Zamówienie zostanie dostarczone na godzinę: " << order.godzinaDostawy << endl;
+    if (order.status == 2) {
+        cout << "Zamówienie zostanie dostarczone na godzinę: " << order.godzinaDostawy << endl;
+    }
     cout << "Paragon został zapisany" << endl;
     cout << "Wciśnij dowolny klawisz, aby zakończyć" << endl;
     getch();
@@ -293,17 +297,19 @@ int main() {
                     order.address = adres;
                     cout << "\nTwój adres to:" << endl;
                     cout << adres << endl;
-
-                    cout << "\nWprowadź godzinę dostawy: ";
-                    cin >> godzinaDostawy;
-                    order.godzinaDostawy = godzinaDostawy;
-                    if (godzinaDostawy >= 10 && godzinaDostawy <= 22) {
-                        cout << "\nGodzina dostawy: " << godzinaDostawy << endl;
-                        break;
-                    } else {
-                        cout << "\nNiestety, gosopoda jest otwarta tylko w godzinach 10:00 - 22:00." << endl;
-                        continue;
+                    while (true) {
+                        cout << "\nWprowadź godzinę dostawy: ";
+                        cin >> godzinaDostawy;
+                        order.godzinaDostawy = godzinaDostawy;
+                        if (godzinaDostawy >= 10 && godzinaDostawy <= 22) {
+                            cout << "\nGodzina dostawy: " << godzinaDostawy << endl;
+                            break;
+                        } else {
+                            cout << "\nNiestety, gosopoda jest otwarta tylko w godzinach 10:00 - 22:00." << endl;
+                            continue;
+                        }
                     }
+                    break;
                 }
 
                 cout << "\nWybrałeś złą opcje!" << endl;
